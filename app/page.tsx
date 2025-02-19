@@ -1,101 +1,127 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Desktop from "../components/Desktop"
+import Dock from "../components/Dock"
+import Window from "../components/Window"
+import FileSystem from "../components/FileSystem"
+import Terminal from "../components/Terminal"
+import ProjectViewer from "../components/ProjectViewer"
+import ImageViewer from "../components/ImageViewer"
+import VideoPlayer from "../components/VideoPlayer"
+import StartMenu from "../components/StartMenu"
+import Notification from "../components/Notification"
+import AboutMe from "../components/AboutMe"
+
+export default function Portfolio() {
+  const [windows, setWindows] = useState<{ [key: string]: boolean }>({
+    fileSystem: false,
+    terminal: false,
+    project: false,
+    imageViewer: false,
+    videoPlayer: false,
+    aboutMe: false,
+  })
+  const [activeProject, setActiveProject] = useState<string | null>(null)
+  const [showStartMenu, setShowStartMenu] = useState(false)
+  const [notifications, setNotifications] = useState<string[]>([])
+
+  const toggleWindow = (window: string) => {
+    setWindows((prev) => ({ ...prev, [window]: !prev[window] }))
+  }
+
+  const openProject = (project: string) => {
+    setActiveProject(project)
+    toggleWindow("project")
+  }
+
+  const addNotification = (message: string) => {
+    setNotifications((prev) => [...prev, message])
+    setTimeout(() => {
+      setNotifications((prev) => prev.slice(1))
+    }, 5000)
+  }
+
+  useEffect(() => {
+    // Simulate receiving notifications
+    const notificationMessages = [
+      "Welcome to your interactive portfolio!",
+      "New project added: Check it out!",
+      "Don't forget to update your resume.",
+    ]
+
+    notificationMessages.forEach((message, index) => {
+      setTimeout(() => addNotification(message), (index + 1) * 10000)
+    })
+  }, []) // Removed addNotification from dependencies
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <motion.div
+      className="h-screen bg-gradient-to-br from-blue-900 to-purple-900 text-white overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Desktop />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      <AnimatePresence>
+        {windows.fileSystem && (
+          <Window key="fileSystem" title="File System" onClose={() => toggleWindow("fileSystem")}>
+            <FileSystem onSelectProject={openProject} />
+          </Window>
+        )}
+
+        {windows.terminal && (
+          <Window key="terminal" title="Terminal" onClose={() => toggleWindow("terminal")}>
+            <Terminal openProject={openProject} />
+          </Window>
+        )}
+
+        {windows.project && activeProject && (
+          <Window key="project" title={activeProject} onClose={() => toggleWindow("project")}>
+            <ProjectViewer project={activeProject} />
+          </Window>
+        )}
+
+        {windows.imageViewer && (
+          <Window key="imageViewer" title="Image Viewer" onClose={() => toggleWindow("imageViewer")}>
+            <ImageViewer />
+          </Window>
+        )}
+
+        {windows.videoPlayer && (
+          <Window key="videoPlayer" title="Video Player" onClose={() => toggleWindow("videoPlayer")}>
+            <VideoPlayer />
+          </Window>
+        )}
+
+{windows.aboutMe && ( // <-- Agregar esta condición
+    <Window key="aboutMe" title="About Me" onClose={() => toggleWindow("aboutMe")}>
+      <AboutMe />
+    </Window>
+  )}
+      </AnimatePresence>
+
+      <Dock
+        onOpenFileSystem={() => toggleWindow("fileSystem")}
+        onOpenTerminal={() => toggleWindow("terminal")}
+        onOpenImageViewer={() => toggleWindow("imageViewer")}
+        onOpenVideoPlayer={() => toggleWindow("videoPlayer")}
+        onToggleStartMenu={() => setShowStartMenu(!showStartMenu)}
+        onOpenAboutMe={() => toggleWindow("aboutMe")}
+      />
+
+      {showStartMenu && <StartMenu onClose={() => setShowStartMenu(false)} onOpenWindow={toggleWindow} />}
+
+      <div className="fixed top-4 right-4 space-y-2">
+        <AnimatePresence>
+          {notifications.map((notification, index) => (
+            <Notification key={index} message={notification} />
+          ))}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  )
 }
+
