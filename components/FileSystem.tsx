@@ -6,13 +6,40 @@ import { motion } from "framer-motion"
 interface FileSystemItemProps {
   name: string
   type: "folder" | "file"
+  url?: string
   children?: FileSystemItemProps[]
 }
 
+// Ejemplo con enlaces a GitHub
 const projects: FileSystemItemProps[] = [
-  { name: "Project 1", type: "folder", children: [{ name: "README.md", type: "file" }] },
-  { name: "Project 2", type: "folder", children: [{ name: "index.html", type: "file" }] },
-  { name: "About.txt", type: "file" },
+  {
+    name: "Project Front-End",
+    type: "folder",
+    url: "https://github.com/GabrielGM16/front_global_aw",
+    children: [
+      {
+        name: "README.md",
+        type: "file",
+        url: "https://github.com/GabrielGM16/front_global_aw/blob/master/README.md"
+      }
+    ],
+  },
+  {
+    name: "Project Back-End",
+    type: "folder",
+    url: "https://github.com/GabrielGM16/back_global_aw",
+    children: [
+      {
+        name: "README.md",
+        type: "file",
+        url: "https://github.com/GabrielGM16/back_global_aw/blob/main/README.md"
+      }
+    ],
+  },
+  {
+    name: "About.txt",
+    type: "file",
+  },
 ]
 
 interface FileSystemProps {
@@ -45,11 +72,21 @@ interface FileSystemItemComponentProps {
 }
 
 function FileSystemItem({ item, onSelect }: FileSystemItemComponentProps) {
+  const handleClick = () => {
+    if (item.url) {
+      // Abre el enlace en otra pestaña
+      window.open(item.url, "_blank")
+    } else {
+      // Lógica original
+      onSelect(item.name)
+    }
+  }
+
   return (
     <motion.div className="mb-2" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
       <button
         className="flex items-center text-left w-full hover:bg-gray-700 p-1 rounded"
-        onClick={() => onSelect(item.name)}
+        onClick={handleClick}
       >
         {item.type === "folder" ? <Folder className="mr-2" /> : <File className="mr-2" />}
         {item.name}
